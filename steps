@@ -1,0 +1,14 @@
+Create an project in firebase
+enable google auth
+Select firebase in project settings and follow the steps to get `lib/firebase_options.dart`
+
+For debug login
+https://developers.google.com/android/guides/client-auth
+https://stackoverflow.com/questions/54557479/flutter-and-google-sign-in-plugin-platformexceptionsign-in-failed-com-google
+
+in short just run
+```
+keytool -list -v \
+-alias androiddebugkey -keystore ~/.android/debug.keystore
+```
+and copy pasta the sha fingerprint
