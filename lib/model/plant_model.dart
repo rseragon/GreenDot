@@ -7,5 +7,5 @@ class PlantInfo {
   String extraInfo = "";
   String plantType = "";
 
-  PlantInfo(this.lat, this.lng, this.extraInfo, this.plantType);
+  PlantInfo(this.lat, this.lng, this.plantType, this.extraInfo);
 }

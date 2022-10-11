@@ -95,6 +95,20 @@ class _MapsScreenState extends State<MapsScreen> {
                 Navigator.pop(context); // To close the drawer
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("TODO")));
               },
+            ),
+            ListTile(
+              title: const Text(
+                "Awoo",
+                style: TextStyle(color: Colors.white),
+              ),
+              leading: const Icon(Icons.info_rounded, color: Colors.white70,),
+              onTap: () async {
+                PlantDatabase.initDatabase();
+                await PlantDatabase.addDummyData();
+                final plant = await PlantDatabase.getDummyData();
+                if(plant != null)
+                  _mapController.addMarker(GeoPoint(latitude: plant.lat, longitude: plant.lng));
+              },
             )
           ],
         )
