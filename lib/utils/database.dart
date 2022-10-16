@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fyto/model/plant_details.dart';
 import 'package:fyto/model/plant_model.dart';
 import 'package:fyto/widgets/plant_info_widget.dart';
 
@@ -98,36 +99,27 @@ class PlantDatabase {
     return Future.value(info);
   }
 
-  static List<Widget> getPlantsInfo() {
-    return [
-      PlantInfoListWidget(
-          PlantInfo(1.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(2.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(3.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(4.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(5.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(6.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(7.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(8.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(9.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(10.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(11.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(12.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(13.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-      PlantInfoListWidget(
-          PlantInfo(14.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
-    ];
+  static Future<List<PlantDetails>> getPlantDetails() async {
+    List<PlantDetails> details = [];
+
+    if(!inited) {
+      initDatabase();
+    }
+
+    DataSnapshot pDetRef = await database.ref("PlantDetails").get();
+
+    if(pDetRef.exists) {
+      for(DataSnapshot plant in pDetRef.children) {
+        String plantName = plant.key as String;
+        Map data = plant.value as Map;
+        if(data.isEmpty) {
+          continue;
+        }
+        details.add(PlantDetails(plantName, data['scientific_name'], data['info']));
+
+      }
+    }
+
+    return Future.value(details);
   }
 }

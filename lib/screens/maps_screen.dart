@@ -4,6 +4,7 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fyto/model/plant_model.dart';
 import 'package:fyto/model/plant_type.dart';
 import 'package:fyto/res/custom_color.dart';
+import 'package:fyto/screens/plant_details_screen.dart';
 import 'package:fyto/screens/plant_locations.dart';
 import 'package:fyto/screens/plants_info.dart';
 import 'package:fyto/screens/add_location.dart';
@@ -129,7 +130,7 @@ class _MapsScreenState extends State<MapsScreen> {
                 Navigator.pop(context); // To close the drawer
                 Navigator.push(
                   context, 
-                  MaterialPageRoute(builder: (builder) => PlantsInfoScreen()),
+                  MaterialPageRoute(builder: (builder) => PlantDetailScreen()),
                 );
               },
             ),
