@@ -4,6 +4,7 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fyto/model/plant_model.dart';
 import 'package:fyto/model/plant_type.dart';
 import 'package:fyto/res/custom_color.dart';
+import 'package:fyto/screens/plant_locations.dart';
 import 'package:fyto/screens/plants_info.dart';
 import 'package:fyto/screens/add_location.dart';
 import 'package:fyto/screens/login_screen.dart';
@@ -121,21 +122,6 @@ class _MapsScreenState extends State<MapsScreen> {
             ),
             ListTile(
               title: const Text(
-                "Test database",
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: const Icon(Icons.info_rounded, color: Colors.white70,),
-              onTap: () async {
-                PlantDatabase.initDatabase();
-                // await PlantDatabase.addDummyData();
-                // final plant = await PlantDatabase.getDummyData();
-                final plant = null;
-                if(plant != null)
-                  _mapController.addMarker(GeoPoint(latitude: plant.lat, longitude: plant.lng));
-              },
-            ),
-            ListTile(
-              title: const Text(
                 "About",
                 style: TextStyle(color: Colors.white),
               ),
@@ -159,7 +145,7 @@ class _MapsScreenState extends State<MapsScreen> {
                 height: MediaQuery.of(context).size.height/3,
                 child: OSMFlutter(
                   controller: _mapController,
-                  initZoom: 17,
+                  initZoom: 14,
                   markerOption: MarkerOption(
                     defaultMarker: const MarkerIcon(
                       icon: Icon(
@@ -183,7 +169,11 @@ class _MapsScreenState extends State<MapsScreen> {
                         return InkWell(
                           child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0)),
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(plantTypes[index])));
+                            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(plantTypes[index])));
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (builder) => PlantLocationsScreen(plantTypes[index], plantsInfo[plantTypes[index]] ?? []))
+                            );
                           },
                         );
                       })
