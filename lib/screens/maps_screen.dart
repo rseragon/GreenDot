@@ -23,6 +23,7 @@ class _MapsScreenState extends State<MapsScreen> {
 
   static Map<String, List<PlantInfo>> plantsInfo = {};
   static List<String> plantTypes = [];
+  int count = 0;
 
   @override
     void initState() {
@@ -47,7 +48,6 @@ class _MapsScreenState extends State<MapsScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          // _mapController.addMarker(GeoPoint(latitude: 18.5204, longitude: 73.8567));
           bool loggedIn = await FireAuth.checkLoggedin(context: context);
           if(!loggedIn) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -67,6 +67,18 @@ class _MapsScreenState extends State<MapsScreen> {
       appBar: AppBar(
         title: const Text("Fyto Map"),
         actions: [
+          IconButton(
+            onPressed: () async {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Database fetching..."),
+                backgroundColor: Colors.blueAccent,
+                duration: Duration(milliseconds: 500),
+              ));
+              await getDatabaseData(forced:  true);
+              setState(() {});
+            }, 
+            icon: Icon(Icons.refresh_rounded)
+          ),
           IconButton(
             onPressed: () async {
               bool loggedIn = await FireAuth.checkLoggedin(context: context);
@@ -90,6 +102,7 @@ class _MapsScreenState extends State<MapsScreen> {
             icon: const Icon(Icons.account_circle)
           ),
         ],
+        
       ),
 
       drawer: Drawer(
@@ -163,24 +176,34 @@ class _MapsScreenState extends State<MapsScreen> {
               builder: (context, snapshot) {
                 if(snapshot.connectionState == ConnectionState.done) {
                   return Expanded(
-                    child: ListView.builder(
-                      itemCount: plantTypes.length,
-                      itemBuilder: ((context, index) {
-                        return InkWell(
-                          child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0)),
-                          onTap: () {
-                            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(plantTypes[index])));
-                            Navigator.push(
-                              context, 
-                              MaterialPageRoute(builder: (builder) => PlantLocationsScreen(plantTypes[index], plantsInfo[plantTypes[index]] ?? []))
-                            );
-                          },
-                        );
-                      })
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Total Count: $count"),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: plantTypes.length,
+                            itemBuilder: ((context, index) {
+                              return InkWell(
+                                child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0)),
+                                onTap: () {
+                                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(plantTypes[index])));
+                                  Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (builder) => PlantLocationsScreen(plantTypes[index], plantsInfo[plantTypes[index]] ?? []))
+                                  );
+                                },
+                              );
+                            })
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
-                else {
+                  else {
                   return Center(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -196,11 +219,13 @@ class _MapsScreenState extends State<MapsScreen> {
     );
   }
 
-  Future<void> getDatabaseData() async {
-    
-    if(plantsInfo.isEmpty) {
+  Future<void> getDatabaseData({bool forced = true}) async {
+
+    if(plantsInfo.isEmpty || forced) {
       plantsInfo = await PlantDatabase.getPlantsLocationInfo();
       plantTypes = plantsInfo.keys.toList();
+      count = 0;
+      plantsInfo.forEach((key, value) { count += value.length; });
     }
   }
 }
