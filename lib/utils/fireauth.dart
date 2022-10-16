@@ -9,6 +9,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FireAuth {
 
+  static bool inited = false;
+
   static SnackBar customSnackbar({required String content}) {
     return SnackBar(
       backgroundColor: CustomColors.nordPolarNight1,
@@ -32,6 +34,7 @@ class FireAuth {
       );
     }
 
+    inited = true;
     return firebaseApp;
   }
 
@@ -39,7 +42,11 @@ class FireAuth {
     return FirebaseAuth.instance.currentUser;
   }
 
-  static bool checkLoggedin({required BuildContext context}) {
+  static Future<bool> checkLoggedin({required BuildContext context}) async {
+
+    if(!inited) {
+      await initializeFirebase(context: context);
+    }
 
     FirebaseApp app = Firebase.app();
 

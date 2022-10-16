@@ -2,10 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/res/custom_color.dart';
 import 'package:fyto/screens/login_screen.dart';
 import 'package:fyto/utils/database.dart';
-import 'package:direct_select/direct_select.dart';
 import 'package:fyto/utils/fireauth.dart';
 
 class AddLocation extends StatefulWidget {
@@ -27,7 +25,7 @@ class _AddLocationState extends State<AddLocation> {
   double latDouble = 0.0;
   double lngDouble = 0.0;
 
-  static List<String> plantTypes = [];
+  List<String> plantTypes = [];
   String selectedPlant = "";
 
   late final focusNode;
@@ -57,7 +55,7 @@ class _AddLocationState extends State<AddLocation> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
                     SizedBox(
@@ -72,7 +70,7 @@ class _AddLocationState extends State<AddLocation> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(4.0),
                       child: ElevatedButton.icon(
                         onPressed: () async {
                           GeoPoint point = await _pickerMapController.selectAdvancedPositionPicker();
@@ -81,8 +79,8 @@ class _AddLocationState extends State<AddLocation> {
 
                           await _pickerMapController.advancedPositionPicker();
                         }, 
-                        icon: Icon(Icons.add_location), 
-                        label: Text("Update location"),
+                        icon: const Icon(Icons.add_location), 
+                        label: const Text("Update location"),
                       ),
                     ),
                     Row(
@@ -92,7 +90,7 @@ class _AddLocationState extends State<AddLocation> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               controller: _longitude,
-                              decoration: InputDecoration(labelText: 'Longitude'),
+                              decoration: const InputDecoration(labelText: 'Longitude'),
                               enabled: false,
                             ),
                           ),
@@ -102,7 +100,7 @@ class _AddLocationState extends State<AddLocation> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               controller: _latitude,
-                              decoration: InputDecoration(labelText: 'Latitude',),
+                              decoration: const InputDecoration(labelText: 'Latitude',),
                               enabled: false,
                             ),
                           ),
@@ -110,7 +108,7 @@ class _AddLocationState extends State<AddLocation> {
                       ],
                     ),
                     TextField(
-                      decoration: InputDecoration(labelText: 'Extra Info'),
+                      decoration: const InputDecoration(labelText: 'Extra Info'),
                       controller: _extraInfo,
                       focusNode: focusNode,
                       autofocus: false,
@@ -125,7 +123,7 @@ class _AddLocationState extends State<AddLocation> {
                             child: DropdownButton(
                               value: selectedPlant,
                               isExpanded: true,
-                              items: plants.map((e) => DropdownMenuItem(child: Text(e), value: e,)).toList(),
+                              items: plants.map((e) => DropdownMenuItem(value: e,child: Text(e),)).toList(),
                               onChanged: (String? val) {
                                 if(val is String) {
                                   setState(() {
@@ -142,7 +140,7 @@ class _AddLocationState extends State<AddLocation> {
                         return Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [CircularProgressIndicator()],
+                            children: const [CircularProgressIndicator()],
                           )
                         );
                       })
@@ -199,8 +197,8 @@ class _AddLocationState extends State<AddLocation> {
                         }
 
                       }, 
-                      icon: Icon(Icons.upload_rounded), 
-                      label: Text("Upload")
+                      icon: const Icon(Icons.upload_rounded), 
+                      label: const Text("Upload")
                     ),
                   ],
                 ),
@@ -234,6 +232,7 @@ class _AddLocationState extends State<AddLocation> {
       plantTypes = plantTypes.toSet().toList();
       selectedPlant = plantTypes.first;
     }
-    return plantTypes;
+    return Future.value(plantTypes);
   }
+
 }

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:fyto/model/plant_model.dart';
+import 'package:fyto/model/plant_type.dart';
 import 'package:fyto/res/custom_color.dart';
 import 'package:fyto/screens/plants_info.dart';
 import 'package:fyto/screens/add_location.dart';
@@ -8,6 +10,7 @@ import 'package:fyto/screens/login_screen.dart';
 import 'package:fyto/screens/user_info.dart';
 import 'package:fyto/utils/database.dart';
 import 'package:fyto/utils/fireauth.dart';
+import 'package:fyto/widgets/plant_type_widget.dart';
 
 class MapsScreen extends StatefulWidget {
   @override State<MapsScreen> createState() => _MapsScreenState();
@@ -16,6 +19,9 @@ class MapsScreen extends StatefulWidget {
 class _MapsScreenState extends State<MapsScreen> {
 
   late final _mapController;
+
+  static Map<String, List<PlantInfo>> plantsInfo = {};
+  static List<String> plantTypes = [];
 
   @override
     void initState() {
@@ -37,16 +43,23 @@ class _MapsScreenState extends State<MapsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.firebaseNavy,
-
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
           // _mapController.addMarker(GeoPoint(latitude: 18.5204, longitude: 73.8567));
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (builder) => AddLocation())
-          );
+          bool loggedIn = await FireAuth.checkLoggedin(context: context);
+          if(!loggedIn) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("User not logged in"),
+              backgroundColor: Colors.redAccent,
+            ));
+          }
+          else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (builder) => AddLocation())
+            );
+          }
         }
       ),
 
@@ -54,17 +67,18 @@ class _MapsScreenState extends State<MapsScreen> {
         title: const Text("Fyto Map"),
         actions: [
           IconButton(
-            onPressed: () {
-              if(FireAuth.checkLoggedin(context: context)) {
+            onPressed: () async {
+              bool loggedIn = await FireAuth.checkLoggedin(context: context);
+              if(loggedIn) {
                 User user = FireAuth.getCurrentUser()!;
                 Navigator.push(
                   context, 
                   MaterialPageRoute(builder: (builder) => UserInfoScreen(user: user)),
                 );
               }
-              else {
+                else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  FireAuth.customSnackbar(content: "No user logged in!"),
+                  FireAuth.customSnackbar(content: "User not logged in"),
                 );
                 Navigator.push(
                   context,
@@ -134,7 +148,7 @@ class _MapsScreenState extends State<MapsScreen> {
           ],
         )
       ),
-  
+
       body: SafeArea(
         child: Column(
           children: [
@@ -145,6 +159,7 @@ class _MapsScreenState extends State<MapsScreen> {
                 height: MediaQuery.of(context).size.height/3,
                 child: OSMFlutter(
                   controller: _mapController,
+                  initZoom: 17,
                   markerOption: MarkerOption(
                     defaultMarker: const MarkerIcon(
                       icon: Icon(
@@ -157,12 +172,45 @@ class _MapsScreenState extends State<MapsScreen> {
                 )
               ),
             ),
-            Column(
-              children: PlantDatabase.getPlantsInfo(),
+            FutureBuilder(
+              future: getDatabaseData(),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.done) {
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: plantTypes.length,
+                      itemBuilder: ((context, index) {
+                        return InkWell(
+                          child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0)),
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(plantTypes[index])));
+                          },
+                        );
+                      })
+                    ),
+                  );
+                }
+                else {
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [CircularProgressIndicator()],
+                    ),
+                  );
+                }
+              }
             )
           ],
         )
       ),
     );
+  }
+
+  Future<void> getDatabaseData() async {
+    
+    if(plantsInfo.isEmpty) {
+      plantsInfo = await PlantDatabase.getPlantsLocationInfo();
+      plantTypes = plantsInfo.keys.toList();
+    }
   }
 }

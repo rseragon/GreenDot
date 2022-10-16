@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   final prefs = await SharedPreferences.getInstance();
 
                   // TODO: Remove this during production
-                  // await prefs.setBool("skip_login", true);
+                  await prefs.setBool("skip_login", true);
 
                   Navigator.pushAndRemoveUntil(
                     context, 

@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fyto/model/plant_model.dart';
+import 'package:fyto/widgets/plant_info_widget.dart';
 
 class PlantDatabase {
   static late final FirebaseDatabase database;
@@ -54,7 +55,6 @@ class PlantDatabase {
   }
 
   static Future<bool> uploadPlantLocationInfo(PlantInfo info) async {
-
     //TODO: Error handling
 
     final plantLocationRef = database.ref("PlantLocation/${info.plantType}");
@@ -70,17 +70,64 @@ class PlantDatabase {
     return Future.value(true);
   }
 
+  static Future<Map<String, List<PlantInfo>>> getPlantsLocationInfo() async {
+    if (!inited) {
+      initDatabase();
+    }
+
+    DataSnapshot plantLocRef = await database.ref("PlantLocation").get();
+
+    Map<String, List<PlantInfo>> info = {};
+    // PlantName, PlantInfos
+
+    if (plantLocRef.exists) {
+      for (DataSnapshot child in plantLocRef.children) {
+        String plantName = child.key as String;
+        List<PlantInfo> plantInfoList = [];
+        for (DataSnapshot location in child.children) {
+          final Map val = location.value as Map;
+          if (val.isEmpty) {
+            continue;
+          }
+          plantInfoList.add(PlantInfo(val['lat'], val['lng'], val['plant_type'],
+              val['user_email'], val['extra_info']));
+        }
+        info[plantName] = plantInfoList;
+      }
+    }
+    return Future.value(info);
+  }
 
   static List<Widget> getPlantsInfo() {
-    return const [
-      Text("1"),
-      Text("3"),
-      Text("4"),
-      Text("5"),
-      Text("6"),
-      Text("7"),
-      Text("8"),
-      Text("9"),
+    return [
+      PlantInfoListWidget(
+          PlantInfo(1.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(2.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(3.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(4.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(5.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(6.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(7.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(8.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(9.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(10.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(11.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(12.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(13.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
+      PlantInfoListWidget(
+          PlantInfo(14.0, 0.0, "Awoo", "nyan@neko.cat", "Extrainfo")),
     ];
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_model.dart';
+import 'package:fyto/model/plant_type.dart';
 
-class PlantInfoListWidget extends StatelessWidget {
+class PlantTypeWidget extends StatelessWidget {
 
-  PlantInfo info;
+  PlantType info;
 
-  PlantInfoListWidget(this.info, {super.key});
+  PlantTypeWidget(this.info, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,8 @@ class PlantInfoListWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Species: ${info.plantType}"),
-                Text("Latitude: ${info.lat}° Longitude: ${info.lng}°"),
-                Text("Extra Info: ${info.extraInfo}"),
+                Text("Species: ${info.plantName}"),
+                Text("Count: ${info.count}"),
                 Divider()
               ],
             ),
