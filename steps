@@ -12,3 +12,10 @@ keytool -list -v \
 -alias androiddebugkey -keystore ~/.android/debug.keystore
 ```
 and copy pasta the sha fingerprint
+
+refs
+https://github.com/Twistedben/Great-Places
+
+
+Real-timeDatabase
+"PlantsType" - for all the available plant species

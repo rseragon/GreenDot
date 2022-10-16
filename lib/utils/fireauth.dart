@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fyto/model/plant_model.dart';
 import 'package:fyto/res/custom_color.dart';
 import 'package:fyto/screens/maps_screen.dart';
 import 'package:fyto/screens/user_info.dart';
@@ -38,7 +39,7 @@ class FireAuth {
     return FirebaseAuth.instance.currentUser;
   }
 
-  static checkLoggedin({required BuildContext context}) {
+  static bool checkLoggedin({required BuildContext context}) {
 
     FirebaseApp app = Firebase.app();
 

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fyto/res/custom_color.dart';
+import 'package:fyto/screens/plants_info.dart';
+import 'package:fyto/screens/add_location.dart';
 import 'package:fyto/screens/login_screen.dart';
 import 'package:fyto/screens/user_info.dart';
 import 'package:fyto/utils/database.dart';
@@ -21,7 +23,7 @@ class _MapsScreenState extends State<MapsScreen> {
       
       _mapController = MapController(
                             initMapWithUserPosition: false,
-                            initPosition: GeoPoint(latitude: 47.4358055, longitude: 8.4737324),
+                            initPosition: GeoPoint(latitude:  18.751071 , longitude: 73.802194),
                             // areaLimit: BoundingBox( east: 10.4922941, north: 47.8084648, south: 45.817995, west: 5.9559113,),
                        );
     }
@@ -40,7 +42,11 @@ class _MapsScreenState extends State<MapsScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          _mapController.addMarker(GeoPoint(latitude: 18.5204, longitude: 73.8567));
+          // _mapController.addMarker(GeoPoint(latitude: 18.5204, longitude: 73.8567));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (builder) => AddLocation())
+          );
         }
       ),
 
@@ -93,21 +99,36 @@ class _MapsScreenState extends State<MapsScreen> {
               leading: const Icon(Icons.info_rounded, color: Colors.white70,),
               onTap: () {
                 Navigator.pop(context); // To close the drawer
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("TODO")));
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (builder) => PlantsInfoScreen()),
+                );
               },
             ),
             ListTile(
               title: const Text(
-                "Awoo",
+                "Test database",
                 style: TextStyle(color: Colors.white),
               ),
               leading: const Icon(Icons.info_rounded, color: Colors.white70,),
               onTap: () async {
                 PlantDatabase.initDatabase();
-                await PlantDatabase.addDummyData();
-                final plant = await PlantDatabase.getDummyData();
+                // await PlantDatabase.addDummyData();
+                // final plant = await PlantDatabase.getDummyData();
+                final plant = null;
                 if(plant != null)
                   _mapController.addMarker(GeoPoint(latitude: plant.lat, longitude: plant.lng));
+              },
+            ),
+            ListTile(
+              title: const Text(
+                "About",
+                style: TextStyle(color: Colors.white),
+              ),
+              leading: const Icon(Icons.info_rounded, color: Colors.white70,),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("TODO")));
               },
             )
           ],

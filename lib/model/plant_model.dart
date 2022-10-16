@@ -6,6 +6,7 @@ class PlantInfo {
   double lng;
   String extraInfo = "";
   String plantType = "";
+  String userEmail = "";
 
-  PlantInfo(this.lat, this.lng, this.plantType, this.extraInfo);
+  PlantInfo(this.lat, this.lng, this.plantType, this.userEmail, this.extraInfo);
 }
