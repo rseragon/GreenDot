@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/model/plant_type.dart';
 import 'package:fyto/res/custom_color.dart';
 import 'package:fyto/screens/plant_details_screen.dart';
 import 'package:fyto/screens/plant_locations.dart';

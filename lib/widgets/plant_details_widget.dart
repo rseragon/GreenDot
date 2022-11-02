@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_details.dart';
-
+import 'package:fyto/model/plant_model.dart';
 
 /*
   Used by plant_details_screen to display static info about plants
