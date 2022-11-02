@@ -55,7 +55,7 @@ class PlantDatabase {
     return Future.value(plants.toSet().toList());
   }
 
-  static Future<bool> uploadPlantLocationInfo(PlantInfo info) async {
+  static Future<bool> uploadPlantLocationInfo(PlantLocationInfo info) async {
     //TODO: Error handling
 
     final plantLocationRef = database.ref("PlantLocation/${info.plantType}");
@@ -71,26 +71,26 @@ class PlantDatabase {
     return Future.value(true);
   }
 
-  static Future<Map<String, List<PlantInfo>>> getPlantsLocationInfo() async {
+  static Future<Map<String, List<PlantLocationInfo>>> getPlantsLocationInfo() async {
     if (!inited) {
       initDatabase();
     }
 
     DataSnapshot plantLocRef = await database.ref("PlantLocation").get();
 
-    Map<String, List<PlantInfo>> info = {};
+    Map<String, List<PlantLocationInfo>> info = {};
     // PlantName, PlantInfos
 
     if (plantLocRef.exists) {
       for (DataSnapshot child in plantLocRef.children) {
         String plantName = child.key as String;
-        List<PlantInfo> plantInfoList = [];
+        List<PlantLocationInfo> plantInfoList = [];
         for (DataSnapshot location in child.children) {
           final Map val = location.value as Map;
           if (val.isEmpty) {
             continue;
           }
-          plantInfoList.add(PlantInfo(val['lat'], val['lng'], val['plant_type'],
+          plantInfoList.add(PlantLocationInfo(val['lat'], val['lng'], val['plant_type'],
               val['user_email'], val['extra_info']));
         }
         info[plantName] = plantInfoList;

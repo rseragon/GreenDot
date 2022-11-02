@@ -3,6 +3,18 @@ import 'package:fyto/screens/login_screen.dart';
 import 'package:fyto/screens/maps_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+/*
+  First of all, who ever is reading this project, please refrain from doing so
+  This might be the most unpleasent experience in your entire life
+
+  If you still think of proceeding, then follow the steps in `steps` file to make it a working project
+  
+  and here are refer each file's top to get to know what that file is for 
+
+  good luck misfortued stranger
+*/
+
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();

@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fyto/model/plant_model.dart';
 import 'package:fyto/widgets/plant_info_widget.dart';
 
+/* 
+  This is plant specific info page, which shows the info
+  of latitiute, longitue, extrainfo, picture of plant
+*/
+
 class PlantLocationsScreen extends StatelessWidget {
 
-  List<PlantInfo> plants = [];
+  List<PlantLocationInfo> plants = [];
   String plantName = "";
 
   PlantLocationsScreen(this.plantName, this.plants);
@@ -18,7 +23,7 @@ class PlantLocationsScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            children: plants.map((e) => PlantInfoListWidget(e)).toList(),
+            children: plants.map((e) => PlantLocationInfoWidget(e)).toList(),
           ),
         )
       ),

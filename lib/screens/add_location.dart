@@ -6,6 +6,8 @@ import 'package:fyto/screens/login_screen.dart';
 import 'package:fyto/utils/database.dart';
 import 'package:fyto/utils/fireauth.dart';
 
+/* This screen is for adding location for the plant */
+
 class AddLocation extends StatefulWidget {
 
   @override
@@ -175,7 +177,7 @@ class _AddLocationState extends State<AddLocation> {
                               return;
                             }
 
-                            bool res = await PlantDatabase.uploadPlantLocationInfo(PlantInfo(lat, lng, selectedPlant, userEmail, info));
+                            bool res = await PlantDatabase.uploadPlantLocationInfo(PlantLocationInfo(lat, lng, selectedPlant, userEmail, info));
 
                             if(res == true) {
                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fyto/model/plant_details.dart';
 
+
+/*
+  Used by plant_details_screen to display static info about plants
+  which is fetched from the db
+
+  see plant_details_screen for more info
+*/
+
 class PlantDetailsWidget extends StatelessWidget {
 
   PlantDetails info;

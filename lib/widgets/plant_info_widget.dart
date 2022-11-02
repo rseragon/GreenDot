@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fyto/model/plant_model.dart';
 
-class PlantInfoListWidget extends StatelessWidget {
+/* This shows the longitue latitue and extra info about the plants
+  Used in the plant_locations screen
+*/
 
-  PlantInfo info;
+class PlantLocationInfoWidget extends StatelessWidget {
 
-  PlantInfoListWidget(this.info, {super.key});
+  PlantLocationInfo info;
+
+  PlantLocationInfoWidget(this.info, {super.key});
 
   @override
   Widget build(BuildContext context) {

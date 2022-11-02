@@ -1,5 +1,5 @@
 
-class PlantInfo {
+class PlantLocationInfo {
 
   // lat lng
   double lat;
@@ -8,5 +8,5 @@ class PlantInfo {
   String plantType = "";
   String userEmail = "";
 
-  PlantInfo(this.lat, this.lng, this.plantType, this.userEmail, this.extraInfo);
+  PlantLocationInfo(this.lat, this.lng, this.plantType, this.userEmail, this.extraInfo);
 }

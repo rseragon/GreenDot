@@ -5,6 +5,11 @@ import 'package:fyto/utils/fireauth.dart';
 import 'package:fyto/widgets/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/* The main login screen 
+
+  No login == no upload of data
+*/
+
 class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();

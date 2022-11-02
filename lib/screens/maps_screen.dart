@@ -6,13 +6,14 @@ import 'package:fyto/model/plant_type.dart';
 import 'package:fyto/res/custom_color.dart';
 import 'package:fyto/screens/plant_details_screen.dart';
 import 'package:fyto/screens/plant_locations.dart';
-import 'package:fyto/screens/plants_info.dart';
 import 'package:fyto/screens/add_location.dart';
 import 'package:fyto/screens/login_screen.dart';
 import 'package:fyto/screens/user_info.dart';
 import 'package:fyto/utils/database.dart';
 import 'package:fyto/utils/fireauth.dart';
 import 'package:fyto/widgets/plant_type_widget.dart';
+
+/* This shows most of the plants from the data */
 
 class MapsScreen extends StatefulWidget {
   @override State<MapsScreen> createState() => _MapsScreenState();
@@ -22,7 +23,7 @@ class _MapsScreenState extends State<MapsScreen> {
 
   late final _mapController;
 
-  static Map<String, List<PlantInfo>> plantsInfo = {};
+  static Map<String, List<PlantLocationInfo>> plantsInfo = {};
   static List<String> plantTypes = [];
   int count = 0;
 
@@ -221,7 +222,6 @@ class _MapsScreenState extends State<MapsScreen> {
   }
 
   Future<void> getDatabaseData({bool forced = true}) async {
-
     if(plantsInfo.isEmpty || forced) {
       plantsInfo = await PlantDatabase.getPlantsLocationInfo();
       plantTypes = plantsInfo.keys.toList();

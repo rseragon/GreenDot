@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_details.dart';
 import 'package:fyto/utils/database.dart';
 import 'package:fyto/widgets/plant_details_widget.dart';
+
+/* 
+  This screen has information about plants (like their scientific name, species, info)
+  and uses `plant_details_widget` for showing the info
+
+  follow the `steps` file to understand setting up the db
+*/
 
 class PlantDetailScreen extends StatelessWidget {
 
