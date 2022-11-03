@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fyto/model/plant_model.dart';
+import 'package:photo_view/photo_view.dart';
 
 /* This shows the longitue latitue and extra info about the plants
   Used in the plant_locations screen
@@ -32,11 +33,21 @@ class PlantLocationInfoWidget extends StatelessWidget {
                 if(snapshot.hasData && snapshot.data != null) {
                   url = snapshot.data!;
                 }
-                print(url);
                 return SizedBox(
                   height: 50,
                   width: 50,
-                  child: Image.network(url),
+                  child: InkWell(
+                    child: Hero(
+                      tag: "imageView",
+                      child: Image.network(url),
+                    ),
+                    onTap: () {
+                      showDialog(
+                        context: context, 
+                        builder: (_) => HeroPhotoViewRouteWrapper(imageProvider: NetworkImage(url))
+                      );
+                    },
+                  ),
                 );
               }
             ),
@@ -65,7 +76,37 @@ class PlantLocationInfoWidget extends StatelessWidget {
     var plantImage = storageRef.child(info.imageUri);
 
     var url = await plantImage.getDownloadURL();
+    print("Nyaa " + url);
 
     return (url.isEmpty) ? "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png" : url;
+  }
+}
+class HeroPhotoViewRouteWrapper extends StatelessWidget {
+  const HeroPhotoViewRouteWrapper({
+    required this.imageProvider,
+    this.backgroundDecoration,
+    this.minScale,
+    this.maxScale,
+  });
+
+  final ImageProvider imageProvider;
+  final BoxDecoration? backgroundDecoration;
+  final dynamic minScale;
+  final dynamic maxScale;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints.expand(
+        height: MediaQuery.of(context).size.height,
+      ),
+      child: PhotoView(
+        imageProvider: imageProvider,
+        backgroundDecoration: backgroundDecoration,
+        minScale: minScale,
+        maxScale: maxScale,
+        heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+      ),
+    );
   }
 }

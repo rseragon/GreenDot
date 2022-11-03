@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fyto/model/plant_model.dart';
 
 class PlantDatabase {
@@ -52,22 +55,48 @@ class PlantDatabase {
     return Future.value(plants.toSet().toList());
   }
 
-  static Future<bool> uploadPlantLocationInfo(PlantLocationInfo info) async {
+  static Future<bool> uploadPlantLocationInfo(PlantLocationInfo info, String imagePath) async {
     //TODO: Error handling
 
     final plantLocationRef = database.ref("PlantLocation/${info.plantType}");
     final newLocref = plantLocationRef.push();
 
-    print(newLocref.key);
+    // Upload to database
+    try {
+      newLocref.set({
+        "lat": info.lat,
+        "lng": info.lng,
+        "plant_type": info.plantType,
+        "user_email": info.userEmail,
+        "extra_info": info.extraInfo
+      });
+    } catch(e) {
+      print(e);
+      return Future.value(false);
+    }
 
-    newLocref.set({
-      "lat": info.lat,
-      "lng": info.lng,
-      "plant_type": info.plantType,
-      "user_email": info.userEmail,
-      "extra_info": info.extraInfo
-    });
+    // upload image to storage
+    String imageUri = "userUploads/${info.plantType}/${newLocref.key}.jpg";
+    final res = await uploadImage(imagePath, imageUri);
+    if(!res) {
+      return Future.value(false);
+    }
 
+    return Future.value(true);
+  }
+
+  static Future<bool> uploadImage(String imagePath, String uploadUrl) async {
+    final storageRef = FirebaseStorage.instance.ref();
+
+    final imageUriRef = storageRef.child(uploadUrl);
+
+    try {
+      await imageUriRef.putFile(File(imagePath));
+    } on Exception catch (e) {
+      print(e);
+      return Future.value(false);
+    }
+  
     return Future.value(true);
   }
 

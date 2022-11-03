@@ -5,6 +5,7 @@ import 'package:fyto/model/plant_model.dart';
 import 'package:fyto/screens/login_screen.dart';
 import 'package:fyto/utils/database.dart';
 import 'package:fyto/utils/fireauth.dart';
+import 'package:image_picker/image_picker.dart';
 
 /* This screen is for adding location for the plant */
 
@@ -29,6 +30,7 @@ class _AddLocationState extends State<AddLocation> {
 
   List<String> plantTypes = [];
   String selectedPlant = "";
+  String imagePath = "";
 
   late final focusNode;
 
@@ -50,7 +52,15 @@ class _AddLocationState extends State<AddLocation> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Plant upload"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await uploadPlantLocationInfo(context);
+        },
+        child: Icon(Icons.upload_rounded),
+      ),
       body: SafeArea(
         child: Center(
           child: Column(
@@ -109,12 +119,6 @@ class _AddLocationState extends State<AddLocation> {
                         ),
                       ],
                     ),
-                    TextField(
-                      decoration: const InputDecoration(labelText: 'Extra Info'),
-                      controller: _extraInfo,
-                      focusNode: focusNode,
-                      autofocus: false,
-                    ),
                     FutureBuilder(
                       future: getPlantTypesList(),
                       builder: ((context, snapshot) {
@@ -149,58 +153,29 @@ class _AddLocationState extends State<AddLocation> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () async {
-                        if(FireAuth.checkLoggedin(context: context) == false) {
-                          ScaffoldMessenger.of(context).showSnackBar(FireAuth.customSnackbar(content: "User not logged in"));
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(builder: (builder) => LoginScreen())
+                        XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+                        if(image == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text("Image not selected"),
+                            backgroundColor: Colors.redAccent,
+                          )
                           );
                         }
                         else {
-                          User? user = FireAuth.getCurrentUser();
-                          if(user == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(FireAuth.customSnackbar(content: "User not logged in"));
-                            Navigator.push(
-                              context, 
-                              MaterialPageRoute(builder: (builder) => LoginScreen())
-                            );
-                          }
-                          else {
-                            // TODO: Check the data valididty
-                            String userEmail = user.email ?? "";
-                            double lat = latDouble;
-                            double lng = lngDouble;
-                            String info = _extraInfo.text;
-
-                            if(userEmail == "" || lat == 0.0 || lng == 0.0) {
-                              ScaffoldMessenger.of(context).showSnackBar(FireAuth.customSnackbar(content: "Invalid data"));
-                              return;
-                            }
-
-                            bool res = await PlantDatabase.uploadPlantLocationInfo(PlantLocationInfo(lat, lng, selectedPlant, userEmail, info));
-
-                            if(res == true) {
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                content: Text("Uploaded successfully"),
-                                backgroundColor: Colors.greenAccent,
-                              )
-                              );
-                              Navigator.pop(context);
-                            }
-                            else {
-                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                content: Text("Failed to upload data"),
-                                backgroundColor: Colors.redAccent,
-                              )
-                              );
-                            }
-
-                          }
+                          imagePath = image.path;
                         }
-
-                      }, 
-                      icon: const Icon(Icons.upload_rounded), 
-                      label: const Text("Upload")
+                      },
+                      icon: const Icon(Icons.camera), 
+                      label: const Text("Take Picture")
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        decoration: const InputDecoration(labelText: 'Extra Info'),
+                        controller: _extraInfo,
+                        focusNode: focusNode,
+                        autofocus: false,
+                      ),
                     ),
                   ],
                 ),
@@ -211,6 +186,62 @@ class _AddLocationState extends State<AddLocation> {
         ),
       ),
     );
+  }
+
+  Future<void> uploadPlantLocationInfo(BuildContext context) async  {
+    if(FireAuth.checkLoggedin(context: context) == false) {
+      ScaffoldMessenger.of(context).showSnackBar(FireAuth.customSnackbar(content: "User not logged in"));
+      Navigator.push(
+        context, 
+        MaterialPageRoute(builder: (builder) => LoginScreen())
+      );
+    }
+      else {
+      User? user = FireAuth.getCurrentUser();
+      if(user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(FireAuth.customSnackbar(content: "User not logged in"));
+        Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (builder) => LoginScreen())
+        );
+      }
+        else {
+        // TODO: Check the data valididty
+        String userEmail = user.email ?? "";
+        double lat = latDouble;
+        double lng = lngDouble;
+        String info = _extraInfo.text;
+
+        if(userEmail.isEmpty || lat == 0.0 || lng == 0.0 || imagePath.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Invalid data"),
+            backgroundColor: Colors.redAccent,
+          )
+          );
+          return;
+        }
+
+        bool res = await PlantDatabase.uploadPlantLocationInfo(PlantLocationInfo(lat, lng, selectedPlant, userEmail, info), imagePath);
+
+        if(res == true) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Uploaded successfully"),
+            backgroundColor: Colors.greenAccent,
+          )
+          );
+          Navigator.pop(context);
+        }
+          else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Failed to upload data"),
+            backgroundColor: Colors.redAccent,
+          )
+          );
+        }
+
+      }
+    }
+
   }
 
   void updatePoint(double lat, double lng) {

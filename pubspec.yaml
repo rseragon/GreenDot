@@ -52,6 +52,8 @@ dependencies:
   flutter_osm_plugin: ^0.40.3
   direct_select: ^2.0.0
   firebase_storage: ^10.3.11
+  image_picker: ^0.8.6
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:
