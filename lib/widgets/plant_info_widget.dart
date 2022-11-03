@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fyto/model/plant_model.dart';
 
@@ -23,10 +24,21 @@ class PlantLocationInfoWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 50,
-              width: 50,
-              child: Image.network("https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png")
+            FutureBuilder(
+              future: getPlantPictureDownloadUrl(info),
+              builder: (context, snapshot) {
+
+                String url = "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png";
+                if(snapshot.hasData && snapshot.data != null) {
+                  url = snapshot.data!;
+                }
+                print(url);
+                return SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Image.network(url),
+                );
+              }
             ),
             Column(
               mainAxisSize: MainAxisSize.max,
@@ -43,5 +55,17 @@ class PlantLocationInfoWidget extends StatelessWidget {
       ),
     );
 
+  }
+
+  // These are pictures uploaded by user
+  Future<String> getPlantPictureDownloadUrl(PlantLocationInfo info) async {
+
+    final storageRef = FirebaseStorage.instance.ref().child("userUploads");
+
+    var plantImage = storageRef.child(info.imageUri);
+
+    var url = await plantImage.getDownloadURL();
+
+    return (url.isEmpty) ? "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png" : url;
   }
 }

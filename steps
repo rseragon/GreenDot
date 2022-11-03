@@ -20,3 +20,9 @@ https://github.com/Twistedben/Great-Places
 Real-timeDatabase
 "PlantsType" - for all the available plant species
 "PlantDetails" - for all data for plants
+
+
+For the storage
+Create 2 folders `static`, `userUploads`
+for `static` the file syntax is like - `static/PLANT_SCIENTIFIC_NAME.jpg`
+for `userUploads` the syntax is -	   `userUploads/PLANT_SCIENTIFIC_NAME/UID.jpg`

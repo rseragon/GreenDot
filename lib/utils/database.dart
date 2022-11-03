@@ -1,7 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/widgets/plant_info_widget.dart';
 
 class PlantDatabase {
   static late final FirebaseDatabase database;
@@ -59,6 +57,9 @@ class PlantDatabase {
 
     final plantLocationRef = database.ref("PlantLocation/${info.plantType}");
     final newLocref = plantLocationRef.push();
+
+    print(newLocref.key);
+
     newLocref.set({
       "lat": info.lat,
       "lng": info.lng,
@@ -89,8 +90,10 @@ class PlantDatabase {
           if (val.isEmpty) {
             continue;
           }
-          plantInfoList.add(PlantLocationInfo(val['lat'], val['lng'], val['plant_type'],
-              val['user_email'], val['extra_info']));
+          var plant = PlantLocationInfo(val['lat'], val['lng'], val['plant_type'],
+                  val['user_email'], val['extra_info']);
+          plant.imageUri = "${plant.plantType}/${location.key}.jpg";  // get plant image uri
+          plantInfoList.add(plant);
         }
         info[plantName] = plantInfoList;
       }

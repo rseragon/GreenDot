@@ -4,8 +4,9 @@ class PlantLocationInfo {
   double lat;
   double lng;
   String extraInfo = "";
-  String plantType = "";
+  String plantType = ""; // This is the scientific name of the plant
   String userEmail = "";
+  String imageUri = ""; // This will be processed while getting data
 
   PlantLocationInfo(this.lat, this.lng, this.plantType, this.userEmail, this.extraInfo);
 }

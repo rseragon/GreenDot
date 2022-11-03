@@ -7,8 +7,7 @@ import 'package:fyto/screens/plant_details_screen.dart';
 import 'package:fyto/screens/plant_locations.dart';
 import 'package:fyto/screens/add_location.dart';
 import 'package:fyto/screens/login_screen.dart';
-import 'package:fyto/screens/user_info.dart';
-import 'package:fyto/utils/database.dart';
+import 'package:fyto/screens/user_info.dart'; import 'package:fyto/utils/database.dart';
 import 'package:fyto/utils/fireauth.dart';
 import 'package:fyto/widgets/plant_type_widget.dart';
 
@@ -66,8 +65,16 @@ class _MapsScreenState extends State<MapsScreen> {
       ),
 
       appBar: AppBar(
-        title: const Text("Fyto Map"),
+        title: const Text("Plants Map"),
         actions: [
+          // IconButton(
+          //   onPressed: () async {
+          //     GeoPoint p = GeoPoint(latitude: 18.5204, longitude: 73.8567);
+          //     await _mapController.addMarker(p);
+          //     setState(() {});
+          //   }, 
+          //   icon: Icon(Icons.location_pin),
+          // ),
           IconButton(
             onPressed: () async {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -163,9 +170,9 @@ class _MapsScreenState extends State<MapsScreen> {
                   markerOption: MarkerOption(
                     defaultMarker: const MarkerIcon(
                       icon: Icon(
-                        Icons.map_rounded, 
+                        Icons.location_pin, 
                         color: Colors.greenAccent,
-                        size: 20,
+                        size: 60,
                       ),
                     )
                   ),
