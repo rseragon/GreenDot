@@ -13,6 +13,7 @@ migrate_working_dir/
 # api
 lib/firebase_options.dart
 GoogleService-Info.plist
+google-services.json
 
 # Useless metrics
 flutter_jank_metrics*
