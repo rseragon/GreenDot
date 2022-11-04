@@ -52,7 +52,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-        title: Text("Fyto"),
+        title: Text("Green Dot"),
       ),
       body: SafeArea(
         child: Padding(

@@ -1,2 +1,2 @@
-# Fyto
+# GreenDot
 A Plant geo-tagging application written for a NGO.

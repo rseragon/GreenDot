@@ -124,7 +124,7 @@ class _MapsScreenState extends State<MapsScreen> {
                 color: Colors.blueAccent
               ),
               child: Text(
-                "Fyto geo tagger",
+                "Green dot Geo-tagger",
                 style: TextStyle(color: Colors.white),
               )
             ),

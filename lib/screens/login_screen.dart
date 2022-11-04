@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // ),
                     SizedBox(height: 20),
                     Text(
-                      'Fyto',
+                      'Green Dot',
                       style: TextStyle(
                         color: CustomColors.firebaseYellow,
                         fontSize: 40,
