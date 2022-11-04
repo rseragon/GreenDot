@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/res/custom_color.dart';
-import 'package:fyto/screens/plant_details_screen.dart';
-import 'package:fyto/screens/plant_locations.dart';
-import 'package:fyto/screens/add_location.dart';
-import 'package:fyto/screens/login_screen.dart';
-import 'package:fyto/screens/user_info.dart'; import 'package:fyto/utils/database.dart';
-import 'package:fyto/utils/fireauth.dart';
-import 'package:fyto/widgets/plant_type_widget.dart';
+import 'package:greendot/model/plant_model.dart';
+import 'package:greendot/res/custom_color.dart';
+import 'package:greendot/screens/plant_details_screen.dart';
+import 'package:greendot/screens/plant_locations.dart';
+import 'package:greendot/screens/add_location.dart';
+import 'package:greendot/screens/login_screen.dart';
+import 'package:greendot/screens/user_info.dart'; import 'package:greendot/utils/database.dart';
+import 'package:greendot/utils/fireauth.dart';
+import 'package:greendot/widgets/plant_type_widget.dart';
 
 /* This shows most of the plants from the data */
 

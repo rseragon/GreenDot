@@ -1,5 +1,6 @@
 Create an project in firebase
 enable google auth
+enable realtime database and storage
 Select firebase in project settings and follow the steps to get `lib/firebase_options.dart`
 
 For debug login

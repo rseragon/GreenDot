@@ -1,6 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_model.dart';
+import 'package:greendot/model/plant_model.dart';
 import 'package:photo_view/photo_view.dart';
 
 /* This shows the longitue latitue and extra info about the plants

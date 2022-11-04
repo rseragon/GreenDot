@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/screens/login_screen.dart';
-import 'package:fyto/screens/maps_screen.dart';
+import 'package:greendot/screens/login_screen.dart';
+import 'package:greendot/screens/maps_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 

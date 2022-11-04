@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fyto/model/plant_model.dart';
+import 'package:greendot/model/plant_model.dart';
 
 class PlantDatabase {
   static late final FirebaseDatabase database;

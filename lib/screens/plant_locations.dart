@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/widgets/plant_info_widget.dart';
+import 'package:greendot/model/plant_model.dart';
+import 'package:greendot/widgets/plant_info_widget.dart';
 
 /* 
   This is plant specific info page, which shows the info

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fyto/res/custom_color.dart';
-import 'package:fyto/screens/login_screen.dart';
-import 'package:fyto/utils/fireauth.dart';
+import 'package:greendot/res/custom_color.dart';
+import 'package:greendot/screens/login_screen.dart';
+import 'package:greendot/utils/fireauth.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key, required User user})

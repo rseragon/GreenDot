@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/screens/login_screen.dart';
-import 'package:fyto/utils/database.dart';
-import 'package:fyto/utils/fireauth.dart';
+import 'package:greendot/model/plant_model.dart';
+import 'package:greendot/screens/login_screen.dart';
+import 'package:greendot/utils/database.dart';
+import 'package:greendot/utils/fireauth.dart';
 import 'package:image_picker/image_picker.dart';
 
 /* This screen is for adding location for the plant */

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_model.dart';
+import 'package:greendot/model/plant_model.dart';
 
 class PlantTypeWidget extends StatelessWidget {
 

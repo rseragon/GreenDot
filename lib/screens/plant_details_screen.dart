@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/utils/database.dart';
-import 'package:fyto/widgets/plant_details_widget.dart';
+import 'package:greendot/utils/database.dart';
+import 'package:greendot/widgets/plant_details_widget.dart';
 
 /* 
   This screen has information about plants (like their scientific name, species, info)
