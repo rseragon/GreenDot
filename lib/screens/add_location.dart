@@ -35,6 +35,8 @@ class _AddLocationState extends State<AddLocation> {
 
   late final focusNode;
 
+  bool uploading = false;
+
   @override
   void initState() {
     super.initState();
@@ -57,8 +59,15 @@ class _AddLocationState extends State<AddLocation> {
         title: Text("Plant upload"),
       ),
       floatingActionButton: FloatingActionButton(
+        
         onPressed: () async {
+          if(uploading) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("It's being uploaded, wait a moment")));
+            return;
+          }
+          uploading = true;
           await uploadPlantLocationInfo(context);
+          uploading = false;
         },
         child: Icon(Icons.upload_rounded),
       ),
@@ -249,7 +258,7 @@ class _AddLocationState extends State<AddLocation> {
           return;
         }
 
-        if(lat == 0.0 || lng == 0.0) {
+        if(imagePath.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text("Image not selected"),
             backgroundColor: Colors.redAccent,
