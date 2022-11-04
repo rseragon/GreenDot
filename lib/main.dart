@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greendot/screens/login_screen.dart';
 import 'package:greendot/screens/maps_screen.dart';
+import 'package:greendot/utils/fireauth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -55,6 +56,7 @@ class Fyto extends StatelessWidget {
                   return LoginScreen();
                 }
                 else {
+                  FireAuth.initializeFirebase(context: context);
                   return MapsScreen();
                 }
 

@@ -6,6 +6,7 @@ import 'package:greendot/screens/login_screen.dart';
 import 'package:greendot/utils/database.dart';
 import 'package:greendot/utils/fireauth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /* This screen is for adding location for the plant */
 
@@ -62,126 +63,143 @@ class _AddLocationState extends State<AddLocation> {
         child: Icon(Icons.upload_rounded),
       ),
       body: SafeArea(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 4,
-                      width: MediaQuery.of(context).size.width,
-                      child: CustomPickerLocation(
-                        controller: _pickerMapController,
-                        onMapReady: setCurrentLocation,
-                        pickerConfig: const CustomPickerLocationConfig(
-                          initZoom: 17,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          GeoPoint point = await _pickerMapController.selectAdvancedPositionPicker();
-
-                          updatePoint(point.latitude, point.longitude);
-
-                          await _pickerMapController.advancedPositionPicker();
-                        }, 
-                        icon: const Icon(Icons.add_location), 
-                        label: const Text("Update location"),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _longitude,
-                              decoration: const InputDecoration(labelText: 'Longitude'),
-                              enabled: false,
-                            ),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 4,
+                        width: MediaQuery.of(context).size.width,
+                        child: CustomPickerLocation(
+                          controller: _pickerMapController,
+                          onMapReady: setCurrentLocation,
+                          pickerConfig: const CustomPickerLocationConfig(
+                            initZoom: 17,
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: _latitude,
-                              decoration: const InputDecoration(labelText: 'Latitude',),
-                              enabled: false,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            GeoPoint point = await _pickerMapController.selectAdvancedPositionPicker();
+
+                            updatePoint(point.latitude, point.longitude);
+
+                            await _pickerMapController.advancedPositionPicker();
+                          }, 
+                          icon: const Icon(Icons.add_location), 
+                          label: const Text("Update location"),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: _longitude,
+                                decoration: const InputDecoration(labelText: 'Longitude'),
+                                enabled: false,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    FutureBuilder(
-                      future: getPlantTypesList(),
-                      builder: ((context, snapshot) {
-                        if(snapshot.connectionState == ConnectionState.done) {
-                          List<String> plants = snapshot.data ?? [];
-                          return Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: DropdownButton(
-                              value: selectedPlant,
-                              isExpanded: true,
-                              items: plants.map((e) => DropdownMenuItem(value: e,child: Text(e),)).toList(),
-                              onChanged: (String? val) {
-                                if(val is String) {
-                                  setState(() {
-                                    selectedPlant = val;
-                                  });
-                                  if(focusNode.hasFocus) {
-                                    focusNode.unfocus();
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: _latitude,
+                                decoration: const InputDecoration(labelText: 'Latitude',),
+                                enabled: false,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      FutureBuilder(
+                        future: getPlantTypesList(),
+                        builder: ((context, snapshot) {
+                          if(snapshot.connectionState == ConnectionState.done) {
+                            List<String> plants = snapshot.data ?? [];
+                            return Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: DropdownButton(
+                                value: selectedPlant,
+                                isExpanded: true,
+                                items: plants.map((e) => DropdownMenuItem(value: e,child: Text(e),)).toList(),
+                                onChanged: (String? val) {
+                                  if(val is String) {
+                                    setState(() {
+                                      selectedPlant = val;
+                                    });
+                                    if(focusNode.hasFocus) {
+                                      focusNode.unfocus();
+                                    }
                                   }
                                 }
-                              }
-                            ),
+                              ),
+                            );
+                          }
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [CircularProgressIndicator()],
+                            )
                           );
-                        }
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [CircularProgressIndicator()],
-                          )
-                        );
-                      })
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
-                        if(image == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("Image not selected"),
-                            backgroundColor: Colors.redAccent,
-                          )
-                          );
-                        }
-                        else {
-                          imagePath = image.path;
-                        }
-                      },
-                      icon: const Icon(Icons.camera), 
-                      label: const Text("Take Picture")
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        decoration: const InputDecoration(labelText: 'Extra Info'),
-                        controller: _extraInfo,
-                        focusNode: focusNode,
-                        autofocus: false,
+                        })
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          var status = await Permission.camera.status;
 
-            ],
+                          if(status.isDenied) {
+                            // ask for permission as it was not denied or asked earlier
+                            status = await Permission.camera.request();
+                          }
+
+                          if(status.isPermanentlyDenied) {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text("Camera permission denied, enable it in settings"),
+                              backgroundColor: Colors.redAccent,
+                            ));
+                            return;
+                          }
+
+                          XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+                          if(image == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text("Image not selected"),
+                              backgroundColor: Colors.redAccent,
+                            )
+                            );
+                          }
+                            else {
+                            imagePath = image.path;
+                          }
+                        },
+                        icon: const Icon(Icons.camera), 
+                        label: const Text("Take Picture")
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+                          decoration: const InputDecoration(labelText: 'Extra Info'),
+                          controller: _extraInfo,
+                          focusNode: focusNode,
+                          autofocus: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
           ),
         ),
       ),
@@ -212,9 +230,28 @@ class _AddLocationState extends State<AddLocation> {
         double lng = lngDouble;
         String info = _extraInfo.text;
 
-        if(userEmail.isEmpty || lat == 0.0 || lng == 0.0 || imagePath.isEmpty) {
+        // Error checks
+        if(userEmail.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Invalid data"),
+            content: Text("User email is invalid"),
+            backgroundColor: Colors.redAccent,
+          )
+          );
+          return;
+        }
+
+        if(lat == 0.0 || lng == 0.0) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Geo point not selected"),
+            backgroundColor: Colors.redAccent,
+          )
+          );
+          return;
+        }
+
+        if(lat == 0.0 || lng == 0.0) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Image not selected"),
             backgroundColor: Colors.redAccent,
           )
           );

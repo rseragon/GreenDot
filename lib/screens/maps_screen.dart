@@ -77,6 +77,7 @@ class _MapsScreenState extends State<MapsScreen> {
           // ),
           IconButton(
             onPressed: () async {
+              PlantDatabase.initDatabase();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("Database fetching..."),
                 backgroundColor: Colors.blueAccent,

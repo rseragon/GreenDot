@@ -24,14 +24,16 @@ class PlantTypeWidget extends StatelessWidget {
               width: 50,
               child: Image.network("https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png")
             ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Species: ${info.plantName}"),
-                Text("Count: ${info.count}"),
-                Divider()
-              ],
+            Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Species: ${info.plantName}"),
+                  Text("Count: ${info.count}"),
+                  Divider()
+                ],
+              ),
             ),
           ],
         ),
