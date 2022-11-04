@@ -37,13 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Flexible(
-                    //   flex: 1,
-                    //   child: Image.asset(
-                    //     'assets/google_logo.png',
-                    //     height: 160,
-                    //   ),
-                    // ),
+                    Flexible(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/google_logo.png',
+                        height: 160,
+                      ),
+                    ),
                     SizedBox(height: 20),
                     Text(
                       'Green Dot',

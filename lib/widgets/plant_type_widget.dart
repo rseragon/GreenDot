@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:greendot/model/plant_model.dart';
 
@@ -19,10 +20,20 @@ class PlantTypeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 50,
-              width: 50,
-              child: Image.network("https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png")
+            FutureBuilder(
+              future: getPlantPictureDownloadUrl(info),
+              builder: (context, snapshot) {
+
+                Widget child = Image.asset("assets/plant_placeholder.png");
+                if(snapshot.hasData && snapshot.data != null) {
+                  child = Image.network(snapshot.data!);
+                }
+                return SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: child,
+                );
+              }
             ),
             Container(
               child: Column(
@@ -40,5 +51,16 @@ class PlantTypeWidget extends StatelessWidget {
       ),
     );
 
+  }
+  // These are statck files
+  Future<String> getPlantPictureDownloadUrl(PlantType info) async {
+
+    final storageRef = FirebaseStorage.instance.ref().child("static");
+
+    var plantImage = storageRef.child("${info.plantName}.jpg");
+
+    var url = await plantImage.getDownloadURL();
+
+    return (url.isEmpty) ? "" : url;
   }
 }
