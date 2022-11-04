@@ -9,6 +9,6 @@ class CustomColors {
   static final Color googleBackground = Color(0xFF4285F4);
   
   static final Color nordPolarNight1 = Color(0x2e3440);
-  static final Color nordSnowStorm1 = Color(0xd8dee9);
+  static final Color nordSnowStorm1 = Color(0xE5E9F0); 
 }
 

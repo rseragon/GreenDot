@@ -81,10 +81,15 @@ class PlantLocationInfoWidget extends StatelessWidget {
 
     final storageRef = FirebaseStorage.instance.ref().child("userUploads");
 
-    var plantImage = storageRef.child(info.imageUri);
 
-    var url = await plantImage.getDownloadURL();
-
+    String url = "";
+    try{
+      var plantImage = storageRef.child(info.imageUri);
+      url = await plantImage.getDownloadURL();
+    }
+    catch (e) {
+      return "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png";
+    }
     return (url.isEmpty) ? "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png" : url;
   }
 }

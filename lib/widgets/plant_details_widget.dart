@@ -32,8 +32,8 @@ class PlantDetailsWidget extends StatelessWidget {
               builder: (context, snapshot) {
 
                 Widget child = Image.asset("assets/plant_placeholder.png");
-                if(snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty) {
-                  child = Image.network(snapshot.data!);
+                if(snapshot.hasData && snapshot.data != "") {
+                    child = Image.network(snapshot.data!);
                 }
                 return SizedBox(
                   height: 50,
@@ -67,9 +67,14 @@ class PlantDetailsWidget extends StatelessWidget {
 
     final storageRef = FirebaseStorage.instance.ref().child("static");
 
-    var plantImage = storageRef.child("${info.scientificName}.jpg");
-
-    var url = await plantImage.getDownloadURL();
+    String url = "";
+    try{
+      var plantImage = storageRef.child("${info.scientificName}.jpg");
+      url = await plantImage.getDownloadURL();
+    }
+    catch (e) {
+      return "";
+    }
 
     return url;
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:greendot/model/plant_model.dart';
 import 'package:greendot/res/custom_color.dart';
+import 'package:greendot/screens/about_screen.dart';
 import 'package:greendot/screens/plant_details_screen.dart';
 import 'package:greendot/screens/plant_locations.dart';
 import 'package:greendot/screens/add_location.dart';
@@ -119,14 +120,11 @@ class _MapsScreenState extends State<MapsScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blueAccent
+                color: CustomColors.nordSnowStorm1,
               ),
-              child: Text(
-                "Green dot Geo-tagger",
-                style: TextStyle(color: Colors.white),
-              )
+              child: Image.asset("assets/being_volunteer.png"),
             ),
             ListTile(
               title: const Text(
@@ -149,8 +147,10 @@ class _MapsScreenState extends State<MapsScreen> {
               ),
               leading: const Icon(Icons.info_rounded, color: Colors.white70,),
               onTap: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("TODO")));
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (_) => AboutScreen())
+                );
               },
             )
           ],
