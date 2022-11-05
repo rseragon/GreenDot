@@ -12,6 +12,7 @@ import 'package:greendot/screens/user_info.dart';
 import 'package:greendot/utils/database.dart';
 import 'package:greendot/utils/fireauth.dart';
 import 'package:greendot/widgets/plant_type_widget.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 /* This shows most of the plants from the data */
 
@@ -53,9 +54,17 @@ class _MapsScreenState extends State<MapsScreen> {
         child: Icon(Icons.add),
         onPressed: () async {
           bool loggedIn = await FireAuth.checkLoggedin(context: context);
+          bool connectedToInternet = await InternetConnectionChecker().hasConnection;
+
           if(!loggedIn) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("User not logged in"),
+              backgroundColor: Colors.redAccent,
+            ));
+          }
+          else if(!connectedToInternet) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Not connected to internet"),
               backgroundColor: Colors.redAccent,
             ));
           }
