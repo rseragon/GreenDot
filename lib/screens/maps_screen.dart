@@ -8,7 +8,8 @@ import 'package:greendot/screens/plant_details_screen.dart';
 import 'package:greendot/screens/plant_locations.dart';
 import 'package:greendot/screens/add_location.dart';
 import 'package:greendot/screens/login_screen.dart';
-import 'package:greendot/screens/user_info.dart'; import 'package:greendot/utils/database.dart';
+import 'package:greendot/screens/user_info.dart'; 
+import 'package:greendot/utils/database.dart';
 import 'package:greendot/utils/fireauth.dart';
 import 'package:greendot/widgets/plant_type_widget.dart';
 
@@ -20,11 +21,13 @@ class MapsScreen extends StatefulWidget {
 
 class _MapsScreenState extends State<MapsScreen> {
 
-  late final _mapController;
+  late final MapController _mapController;
 
   static Map<String, List<PlantLocationInfo>> plantsInfo = {};
   static List<String> plantTypes = [];
   int count = 0;
+
+  bool mapInitedWithData = false;
 
   @override
     void initState() {
@@ -173,7 +176,7 @@ class _MapsScreenState extends State<MapsScreen> {
                       icon: Icon(
                         Icons.location_pin, 
                         color: Colors.greenAccent,
-                        size: 60,
+                        size: 80,
                       ),
                     )
                   ),
@@ -228,12 +231,40 @@ class _MapsScreenState extends State<MapsScreen> {
     );
   }
 
+  Future<void> updateMap({bool forced = false}) async {
+
+    if(forced || !mapInitedWithData) {
+      for(var kv in plantsInfo.entries) {
+        var key = kv.key;
+        var value = kv.value;
+
+        double lat = 0.0;
+        double lng = 0.0;
+        int count = 0;
+        for(var info in value.take(5)) {
+          await _mapController.addMarker(GeoPoint(latitude: info.lat, longitude: info.lng));
+          lat += info.lat;
+          lng += info.lng;
+          count ++;
+        }
+        lat = lat/count;
+        lng = lng/count;
+        await _mapController.goToLocation(GeoPoint(latitude: lat, longitude: lng));
+      }
+      setState(() {});
+      mapInitedWithData = true;
+    }
+
+  }
+
   Future<void> getDatabaseData({bool forced = true}) async {
     if(plantsInfo.isEmpty || forced) {
       plantsInfo = await PlantDatabase.getPlantsLocationInfo();
       plantTypes = plantsInfo.keys.toList();
       count = 0;
       plantsInfo.forEach((key, value) { count += value.length; });
+      await updateMap();
     }
+
   }
 }
