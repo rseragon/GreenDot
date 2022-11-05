@@ -309,6 +309,7 @@ class _AddLocationState extends State<AddLocation> {
     if(plantTypes.isEmpty) {
       plantTypes = await PlantDatabase.getPlantTypes();
       plantTypes = plantTypes.toSet().toList();
+      plantTypes.sort(); // To have a sorted list which is easier for users
       selectedPlant = plantTypes.first;
     }
     return Future.value(plantTypes);
