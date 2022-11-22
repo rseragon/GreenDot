@@ -16,7 +16,6 @@ class PlantTypeWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -26,11 +25,13 @@ class PlantTypeWidget extends StatelessWidget {
 
                 Widget child = Image.asset("assets/plant_placeholder.png");
                 if(snapshot.hasData && snapshot.data != "") {
-                  child = Image.network(snapshot.data!);
+                  child = Image.network(
+                    snapshot.data!,
+                    fit: BoxFit.contain,
+                  );
                 }
                 return SizedBox(
-                  height: 50,
-                  width: 50,
+                  height: 90,
                   child: child,
                 );
               }
@@ -38,6 +39,7 @@ class PlantTypeWidget extends StatelessWidget {
             Container(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text("Species: ${info.plantName}"),

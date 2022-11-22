@@ -85,7 +85,7 @@ class PlantLocationInfoWidget extends StatelessWidget {
     String url = "";
     try{
       var plantImage = storageRef.child(info.imageUri);
-      url = await plantImage.getDownloadURL();
+      url = await plantImage.getDownloadURL().catchError((err) => {print(err)});
     }
     catch (e) {
       return "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png";

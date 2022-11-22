@@ -36,7 +36,7 @@ class Fyto extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Green Dot",
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       home: FutureBuilder(
         future: SharedPreferences.getInstance(),
         builder: (context, snapshot) {

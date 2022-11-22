@@ -208,7 +208,7 @@ class _MapsScreenState extends State<MapsScreen> {
                             itemCount: plantTypes.length,
                             itemBuilder: ((context, index) {
                               return InkWell(
-                                child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0)),
+                                child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0), key: Key(index.toString()),),
                                 onTap: () {
                                   // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(plantTypes[index])));
                                   Navigator.push(
