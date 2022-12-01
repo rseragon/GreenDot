@@ -1,15 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/res/custom_color.dart';
-import 'package:fyto/screens/plant_details_screen.dart';
-import 'package:fyto/screens/plant_locations.dart';
-import 'package:fyto/screens/add_location.dart';
-import 'package:fyto/screens/login_screen.dart';
-import 'package:fyto/screens/user_info.dart'; import 'package:fyto/utils/database.dart';
-import 'package:fyto/utils/fireauth.dart';
-import 'package:fyto/widgets/plant_type_widget.dart';
+import 'package:greendot/model/plant_model.dart';
+import 'package:greendot/res/custom_color.dart';
+import 'package:greendot/screens/about_screen.dart';
+import 'package:greendot/screens/plant_details_screen.dart';
+import 'package:greendot/screens/plant_locations.dart';
+import 'package:greendot/screens/add_location.dart';
+import 'package:greendot/screens/login_screen.dart';
+import 'package:greendot/screens/user_info.dart'; 
+import 'package:greendot/utils/database.dart';
+import 'package:greendot/utils/fireauth.dart';
+import 'package:greendot/widgets/plant_type_widget.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 /* This shows most of the plants from the data */
 
@@ -19,11 +22,13 @@ class MapsScreen extends StatefulWidget {
 
 class _MapsScreenState extends State<MapsScreen> {
 
-  late final _mapController;
+  late final MapController _mapController;
 
   static Map<String, List<PlantLocationInfo>> plantsInfo = {};
   static List<String> plantTypes = [];
   int count = 0;
+
+  bool mapInitedWithData = false;
 
   @override
     void initState() {
@@ -49,9 +54,17 @@ class _MapsScreenState extends State<MapsScreen> {
         child: Icon(Icons.add),
         onPressed: () async {
           bool loggedIn = await FireAuth.checkLoggedin(context: context);
+          bool connectedToInternet = await InternetConnectionChecker().hasConnection;
+
           if(!loggedIn) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text("User not logged in"),
+              backgroundColor: Colors.redAccent,
+            ));
+          }
+          else if(!connectedToInternet) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Not connected to internet"),
               backgroundColor: Colors.redAccent,
             ));
           }
@@ -77,6 +90,7 @@ class _MapsScreenState extends State<MapsScreen> {
           // ),
           IconButton(
             onPressed: () async {
+              PlantDatabase.initDatabase();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text("Database fetching..."),
                 backgroundColor: Colors.blueAccent,
@@ -118,14 +132,11 @@ class _MapsScreenState extends State<MapsScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blueAccent
+                color: CustomColors.nordSnowStorm1,
               ),
-              child: Text(
-                "Fyto geo tagger",
-                style: TextStyle(color: Colors.white),
-              )
+              child: Image.asset("assets/being_volunteer.png"),
             ),
             ListTile(
               title: const Text(
@@ -148,8 +159,10 @@ class _MapsScreenState extends State<MapsScreen> {
               ),
               leading: const Icon(Icons.info_rounded, color: Colors.white70,),
               onTap: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("TODO")));
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (_) => AboutScreen())
+                );
               },
             )
           ],
@@ -172,7 +185,7 @@ class _MapsScreenState extends State<MapsScreen> {
                       icon: Icon(
                         Icons.location_pin, 
                         color: Colors.greenAccent,
-                        size: 60,
+                        size: 80,
                       ),
                     )
                   ),
@@ -195,7 +208,7 @@ class _MapsScreenState extends State<MapsScreen> {
                             itemCount: plantTypes.length,
                             itemBuilder: ((context, index) {
                               return InkWell(
-                                child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0)),
+                                child: PlantTypeWidget(PlantType(plantTypes[index], plantsInfo[plantTypes[index]]?.length ?? 0), key: Key(index.toString()),),
                                 onTap: () {
                                   // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(plantTypes[index])));
                                   Navigator.push(
@@ -227,12 +240,40 @@ class _MapsScreenState extends State<MapsScreen> {
     );
   }
 
+  Future<void> updateMap({bool forced = false}) async {
+
+    if(forced || !mapInitedWithData) {
+      for(var kv in plantsInfo.entries) {
+        var key = kv.key;
+        var value = kv.value;
+
+        double lat = 0.0;
+        double lng = 0.0;
+        int count = 0;
+        for(var info in value.take(5)) {
+          await _mapController.addMarker(GeoPoint(latitude: info.lat, longitude: info.lng));
+          lat += info.lat;
+          lng += info.lng;
+          count ++;
+        }
+        lat = lat/count;
+        lng = lng/count;
+        await _mapController.goToLocation(GeoPoint(latitude: lat, longitude: lng));
+      }
+      setState(() {});
+      mapInitedWithData = true;
+    }
+
+  }
+
   Future<void> getDatabaseData({bool forced = true}) async {
     if(plantsInfo.isEmpty || forced) {
       plantsInfo = await PlantDatabase.getPlantsLocationInfo();
       plantTypes = plantsInfo.keys.toList();
       count = 0;
       plantsInfo.forEach((key, value) { count += value.length; });
+      await updateMap();
     }
+
   }
 }

@@ -1,6 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_model.dart';
+import 'package:greendot/model/plant_model.dart';
 
 /*
   Used by plant_details_screen to display static info about plants
@@ -31,15 +31,14 @@ class PlantDetailsWidget extends StatelessWidget {
               future: getPlantPictureDownloadUrl(info),
               builder: (context, snapshot) {
 
-                String url = "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png";
-                if(snapshot.hasData && snapshot.data != null) {
-                  url = snapshot.data!;
+                Widget child = Image.asset("assets/plant_placeholder.png");
+                if(snapshot.hasData && snapshot.data != "") {
+                    child = Image.network(snapshot.data!);
                 }
-                print(url);
                 return SizedBox(
                   height: 50,
                   width: 50,
-                  child: Image.network(url),
+                  child: child,
                 );
               }
             ),
@@ -68,10 +67,15 @@ class PlantDetailsWidget extends StatelessWidget {
 
     final storageRef = FirebaseStorage.instance.ref().child("static");
 
-    var plantImage = storageRef.child("${info.scientificName}.jpg");
+    String url = "";
+    try{
+      var plantImage = storageRef.child("${info.scientificName}.jpg");
+      url = await plantImage.getDownloadURL();
+    }
+    catch (e) {
+      return "";
+    }
 
-    var url = await plantImage.getDownloadURL();
-
-    return (url.isEmpty) ? "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png" : url;
+    return url;
   }
 }

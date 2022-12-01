@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_model.dart';
-import 'package:fyto/res/custom_color.dart';
-import 'package:fyto/screens/maps_screen.dart';
-import 'package:fyto/screens/user_info.dart';
+import 'package:greendot/model/plant_model.dart';
+import 'package:greendot/res/custom_color.dart';
+import 'package:greendot/screens/maps_screen.dart';
+import 'package:greendot/screens/user_info.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FireAuth {
@@ -22,6 +22,7 @@ class FireAuth {
   static Future<FirebaseApp> initializeFirebase({
     required BuildContext context,
   }) async {
+
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
     User? user = FirebaseAuth.instance.currentUser;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fyto/res/custom_color.dart';
-import 'package:fyto/screens/maps_screen.dart';
-import 'package:fyto/utils/fireauth.dart';
-import 'package:fyto/widgets/google_sign_in.dart';
+import 'package:greendot/res/custom_color.dart';
+import 'package:greendot/screens/maps_screen.dart';
+import 'package:greendot/utils/fireauth.dart';
+import 'package:greendot/widgets/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /* The main login screen 
@@ -37,16 +37,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Flexible(
-                    //   flex: 1,
-                    //   child: Image.asset(
-                    //     'assets/google_logo.png',
-                    //     height: 160,
-                    //   ),
-                    // ),
+                    Flexible(
+                      flex: 1,
+                      child: Image.asset(
+                        'assets/google_logo.png',
+                        height: 160,
+                      ),
+                    ),
                     SizedBox(height: 20),
                     Text(
-                      'Fyto',
+                      'Green Dot',
                       style: TextStyle(
                         color: CustomColors.firebaseYellow,
                         fontSize: 40,

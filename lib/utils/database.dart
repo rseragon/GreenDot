@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fyto/model/plant_model.dart';
+import 'package:greendot/model/plant_model.dart';
 
 class PlantDatabase {
   static late final FirebaseDatabase database;
-  static late final plantsRef;
   static bool inited = false;
 
   static void initDatabase() {
@@ -15,7 +14,6 @@ class PlantDatabase {
     }
     database = FirebaseDatabase.instance;
     database.setPersistenceEnabled(true);
-    plantsRef = database.ref("plants/");
     inited = true;
   }
 

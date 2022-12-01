@@ -1,6 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fyto/model/plant_model.dart';
+import 'package:greendot/model/plant_model.dart';
 import 'package:photo_view/photo_view.dart';
 
 /* This shows the longitue latitue and extra info about the plants
@@ -34,8 +34,8 @@ class PlantLocationInfoWidget extends StatelessWidget {
                   url = snapshot.data!;
                 }
                 return SizedBox(
-                  height: 50,
-                  width: 50,
+                  height: 140,
+                  width: MediaQuery.of(context).size.width * 0.3 - 10,
                   child: InkWell(
                     child: Hero(
                       tag: "imageView",
@@ -51,15 +51,23 @@ class PlantLocationInfoWidget extends StatelessWidget {
                 );
               }
             ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Species: ${info.plantType}"),
-                Text("Latitude: ${info.lat}° Longitude: ${info.lng}°"),
-                Text("Extra Info: ${info.extraInfo}"),
-                Divider()
-              ],
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7 - 10,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text("Species ", style: TextStyle(fontWeight: FontWeight.bold),),
+                  Text(info.plantType),
+                  const Text("Latitude ", style: TextStyle(fontWeight: FontWeight.bold),),
+                  Text("${info.lat}"),
+                  const Text("Longitude ", style: TextStyle(fontWeight: FontWeight.bold),),
+                  Text("${info.lng}"),
+                  const Text("Extra Info ", style: TextStyle(fontWeight: FontWeight.bold),),
+                  Text(info.extraInfo),
+                  const Divider()
+                ],
+              ),
             ),
           ],
         ),
@@ -73,11 +81,15 @@ class PlantLocationInfoWidget extends StatelessWidget {
 
     final storageRef = FirebaseStorage.instance.ref().child("userUploads");
 
-    var plantImage = storageRef.child(info.imageUri);
 
-    var url = await plantImage.getDownloadURL();
-    print("Nyaa " + url);
-
+    String url = "";
+    try{
+      var plantImage = storageRef.child(info.imageUri);
+      url = await plantImage.getDownloadURL().catchError((err) => {print(err)});
+    }
+    catch (e) {
+      return "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png";
+    }
     return (url.isEmpty) ? "https://www.nicepng.com/png/detail/73-730825_pot-plant-clipart-potted-plant-pot-plant-icon.png" : url;
   }
 }
